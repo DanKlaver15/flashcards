@@ -84,10 +84,10 @@ router.delete('/:id', async (req, res) => {
 });
 
 //Card endpoints
-router.get('/:id/cards', async (req, res) => {
+router.get('/:collectionId/cards', async (req, res) => {
   let collection;
   try {
-    collection = await Collection.findById(req.params.id);
+    collection = await Collection.findById(req.params.collectionId);
   } catch (error) {}
 
   if (!collection)
@@ -204,10 +204,9 @@ router.delete('/:collectionId/cards/:id', async (req, res) => {
   if (!card)
     return res.status(404).send('The card with the given id was not found.');
   let cards = collection.cards;
-  const indexOfCard = cards.indexOf(card);
-  console.log(indexOfCard);
-  cards = cards.length === 1 ? [] : cards.splice(indexOfCard, 1);
-  console.log(cards);
+  cards = cards.filter((card) => {
+    return card.id != req.params.id;
+  });
   try {
     collection = await Collection.findByIdAndUpdate(
       req.params.collectionId,
