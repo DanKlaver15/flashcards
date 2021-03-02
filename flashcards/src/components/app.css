@@ -1,0 +1,5 @@
+div#main {
+	height: 90vh;
+	width: 100%;
+	background: radial-gradient(#429E42, #8A61C7);
+}
