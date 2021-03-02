@@ -1,11 +1,7 @@
 html, body {
 	margin: 0;
 	padding: 0;
-}
-
-body {
-	min-height: 98vh;
-	width: 100vh;
+	overflow: hidden;
 }
 
 * {
@@ -14,8 +10,8 @@ body {
 
 div#main {
 	min-height: 95vh;
-	width: 105vw;
-	left: -10%;
+	min-width: 101%;
+	left: -1%;
 	background: rgb(52,92,62);
 	background: -moz-radial-gradient(circle, rgba(52,92,62,1) 0%, rgba(57,96,82,1) 20%, rgba(60,90,92,1) 37%, rgba(62,84,101,1) 48%, rgba(65,78,111,1) 67%, rgba(66,75,116,1) 74%, rgba(72,63,137,1) 100%);
 	background: -webkit-radial-gradient(circle, rgba(52,92,62,1) 0%, rgba(57,96,82,1) 20%, rgba(60,90,92,1) 37%, rgba(62,84,101,1) 48%, rgba(65,78,111,1) 67%, rgba(66,75,116,1) 74%, rgba(72,63,137,1) 100%);
