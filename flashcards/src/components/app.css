@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-	min-height: 100vh;
+	min-height: 98vh;
 	width: 100vh;
 }
 
@@ -13,7 +13,7 @@ body {
 }
 
 div#main {
-	min-height: 90vh;
+	min-height: 95vh;
 	width: 105vw;
 	left: -10%;
 	background: radial-gradient(#429E42, #8A61C7);
