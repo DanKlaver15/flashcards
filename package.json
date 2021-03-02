@@ -1,7 +1,6 @@
 {
   "name": "study-cards-server",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,9 +12,20 @@
   "dependencies": {
     "config": "^3.3.1",
     "cors": "^2.8.5",
+    "create-react-app": "^4.0.3",
     "express": "^4.17.1",
     "joi": "^17.1.1",
-    "mongoose": "^5.9.25",
-    "nodemon": "^2.0.4"
-  }
+    "mongoose": "^5.11.18",
+    "nodemon": "^2.0.7"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DanKlaver15/flashcards.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DanKlaver15/flashcards/issues"
+  },
+  "homepage": "https://github.com/DanKlaver15/flashcards#readme",
+  "description": ""
 }
