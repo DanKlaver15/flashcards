@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
-const mongoCard = require('./Card');
+const { cardSchema } = require('./Card');
 
 const collectionSchema = new mongoose.Schema({
   title: { type: String, required: true, minlength: 1 },
-  cards: [mongoCard.schema],
+  cards: { type: [cardSchema] }
 });
 
-module.exports = mongoose.model('Collection', collectionSchema);
+const Collection = mongoose.model('Collection', collectionSchema, "flashcards");
+
+exports.Collection = Collection;
