@@ -1,12 +1,14 @@
 .footer-nav { 
 	position: absolute;
 	bottom: 0;
-	background-color: white;
 	width: 105%;
-	height: 12%;
+	height: 15%;
 	left: -3%;
 	border-bottom-left-radius:10px;
 	border-bottom-right-radius:10px;
 	border-top-left-radius: 50% 70%;
 	border-top-right-radius: 50% 70%;
+	background-color: #5b6467;
+	background-image: radial-gradient(#5b6467 0%, #8b939a 74%);
+	box-shadow: 0px 0px 40px black;  
 }
