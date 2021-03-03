@@ -7,6 +7,12 @@
 
 .slides {
   display: grid;
+  margin: 0;
+  position: absolute;
+  top: 45%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  height: 50vh;
 }
 .slides > .slide {
   grid-area: 1/-1;
@@ -22,10 +28,14 @@
   font-size: 5rem;
   width: 5rem;
   height: 5rem;
-  top: 30%;
   transition: opacity 0.3s;
   opacity: 0.7;
   z-index: 5;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
 .slides > button:hover {
   opacity: 1;
@@ -43,7 +53,6 @@
 .slideContent {
   width: 30vw;
   height: 20vw;
-  top: 50%;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -53,6 +62,10 @@
   align-content: center;
   transform-style: preserve-3d;
   transform: perspective(1000px) translateX(calc(100% * var(--offset))) rotateY(calc(-45deg * var(--dir)));
+  filter: blur(calc(6px * var(--blur)));
+  top: calc(1% * var(--higher));
+  top: calc(30% * var(--lower));
+  background-color: white;
 }
 
 .slideContentInner {
