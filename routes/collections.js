@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
-const Collection = require('../models/Collection');
+const { Collection } = require('../models/Collection');
 const { Card } = require('../models/Card');
 
 //Collection endpoints
