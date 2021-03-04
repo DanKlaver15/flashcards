@@ -1,4 +1,4 @@
-.footer-nav { 
+.footer { 
 	position: absolute;
 	bottom: 0;
 	width: 105%;
@@ -11,4 +11,10 @@
 	background-color: #5b6467;
 	background-image: radial-gradient(#9dc5c3 0%, #5e5c5c 74%);
 	box-shadow: 0px 0px 40px black;  
+}
+
+.slideCount {
+	position: relative;
+	text-align: center;
+	padding: 100px 0;
 }
