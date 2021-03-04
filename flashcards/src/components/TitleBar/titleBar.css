@@ -8,6 +8,9 @@
 	border-bottom-left-radius: 50% 50%;
 	border-bottom-right-radius: 50% 50%;
 	background-color: #5b6467;
-	background-image: radial-gradient(#5b6467 0%, #8b939a 74%);
+	background-color: #e9bcb7;
+	background-color: #5d4257;
+	background-color: #9dc5c3;
+	background-image: radial-gradient(#9dc5c3 0%, #5e5c5c 74%);
 	box-shadow: 0px 0px 40px black;  
 }
