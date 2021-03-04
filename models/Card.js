@@ -13,7 +13,7 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-const Card = mongoose.model('Card', cardSchema);
+const Card = mongoose.model('Card', cardSchema, "flashcards");
 
 module.exports.cardSchema = cardSchema;
 module.exports.Card = Card;
