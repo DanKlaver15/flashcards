@@ -59,6 +59,7 @@
 .slideContent {
   width: 30vw;
   height: 20vw;
+  text-align: center;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -69,14 +70,15 @@
   transform-style: preserve-3d;
   transform: perspective(1000px) translateX(calc(100% * var(--offset))) translateY(30%) rotateY(calc(-45deg * var(--dir)));
   filter: blur(calc(6px * var(--blur)));
-  background-color: white;
+  background: radial-gradient(ellipse at top, rgba(233,216,195,1), transparent),
+  					radial-gradient(ellipse at bottom, rgba(230,245,240,1), transparent);
 }
 
 .slideContentInner {
   transform-style: preserve-3d;
   transform: translateZ(2rem);
   transition: opacity 0.3s linear;
-  text-shadow: 0 0.1rem 1rem #000;
+  text-shadow: 0 0.1rem 0.2rem #000;
   opacity: 0;
 }
 
