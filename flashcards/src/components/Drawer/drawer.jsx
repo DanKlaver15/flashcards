@@ -8,6 +8,9 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
@@ -16,20 +19,42 @@ import './drawer.css';
 
 // 'Choose a Collection', 'Add a Collection', 'Edit a Collection', 'Delete a Collection'
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   list: {
     width: 250,
   },
   fullList: {
     width: 'auto',
   },
-});
+  nested: {
+	paddingLeft: theme.spacing(10),
+ },
+}));
 
-export default function TemporaryDrawer() {
+export default function TemporaryDrawer(props) {
+
+	let collectionsList = props.collectionData;
+	console.log(collectionsList);
+
   const classes = useStyles();
   const [state, setState] = React.useState({
     left: false
   });
+  const [chooseOpen, setChooseOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+
+  const handleChooseClick = () => {
+	setChooseOpen(!chooseOpen);
+ };
+
+ const handleEditClick = () => {
+	setEditOpen(!editOpen);
+ };
+
+ const handleDeleteClick = () => {
+	setDeleteOpen(!deleteOpen);
+ };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -39,20 +64,34 @@ export default function TemporaryDrawer() {
     setState({ ...state, [anchor]: open });
   };
 
+  let listTitles = collectionsList.map((i) => {
+	return(
+		<ListItem button key={i.title} className={classes.nested}>
+			<ListItemText primary={i.title}/>
+		</ListItem>
+	)
+});
+
   const list = (anchor) => (
     <div
       className={clsx(classes.list, {
         [classes.fullList]: anchor === 'top' || anchor === 'bottom',
       })}
       role="presentation"
-      onClick={toggleDrawer(anchor, false)}
+      // onClick={toggleDrawer(anchor, false)}
       onKeyDown={toggleDrawer(anchor, false)}
     >
-      <List>
-          <ListItem button key={"chooseCollection"}>
-            <ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
-            <ListItemText primary={"Choose a Collection"} />
-          </ListItem>
+		<List>
+			<ListItem button key={"chooseCollection"} onClick={handleChooseClick}>
+			<ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
+			<ListItemText primary={"Choose a Collection"} />
+			{chooseOpen ? <ExpandLess /> : <ExpandMore />}
+			</ListItem>
+			<Collapse in={chooseOpen} timeout="auto" unmountOnExit>
+			<List component="div" disablePadding>
+				{listTitles}
+			</List>
+			</Collapse>
       </List>
       <Divider />
 		<List>
@@ -63,19 +102,30 @@ export default function TemporaryDrawer() {
       </List>
       <Divider />
 		<List>
-          <ListItem button key={"editCollection"}>
+          <ListItem button key={"editCollection"} onClick={handleEditClick}>
             <ListItemIcon><EditRoundedIcon color="primary"/></ListItemIcon>
             <ListItemText primary={"Edit a Collection"} />
-          </ListItem>
+				{editOpen ? <ExpandLess /> : <ExpandMore />}
+			</ListItem>
+			<Collapse in={editOpen} timeout="auto" unmountOnExit>
+			<List component="div" disablePadding>
+				{listTitles}
+			</List>
+			</Collapse>
       </List>
       <Divider />
 		<List>
-          <ListItem button key={"deleteCollection"}>
+			<ListItem button key={"deleteCollection"} onClick={handleDeleteClick}>
             <ListItemIcon><DeleteRoundedIcon color="primary"/></ListItemIcon>
             <ListItemText primary={"Delete a Collection"} />
-          </ListItem>
+				{deleteOpen ? <ExpandLess /> : <ExpandMore />}
+			</ListItem>
+			<Collapse in={deleteOpen} timeout="auto" unmountOnExit>
+			<List component="div" disablePadding>
+				{listTitles}
+			</List>
+			</Collapse>
       </List>
-      <Divider />
     </div>
   );
 
