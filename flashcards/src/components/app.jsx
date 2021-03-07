@@ -9,20 +9,27 @@ function App() {
 	const [cardData, setCardData] = useState([]);
 	const [dataReady, setDataReady] = useState(false);
 
-	let temp = "603e7562a7b8813da19a7d40";
-	function getCardsFromCollection(collectionID) {
-		axios.get(`http://localhost:5000/api/collections/${collectionID}/cards`)
-		.then(data =>	setCardData(data.data), setDataReady(true));
+	// let temp = "603e7562a7b8813da19a7d40";
+	// function getCardsFromCollection(collectionID) {
+	// 	axios.get(`http://localhost:5000/api/collections/${collectionID}/cards`)
+	// 	.then(data =>	setCardData(data.data), setDataReady(true));
+	// }
+
+	let connectionURI = "http://localhost:5000/api/collections/"
+
+	function getAllCards(uri) {
+		axios.get(uri)
+		.then(data => setCardData(data.data), setDataReady(true));
 	}
 
 	useEffect(() => {
-		getCardsFromCollection(temp);
-	}, [temp]);
+		getAllCards(connectionURI);
+	}, [connectionURI]);
 
 	return (
 		dataReady ?
 			<div id="main">
-				<TitleBar />
+				<TitleBar cardData={cardData}/>
 				<CardViewer cardData={cardData} />
 				<Footer />
 			</div>
