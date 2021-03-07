@@ -8,8 +8,13 @@ import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import ListRoundedIcon from '@material-ui/icons/ListRounded';
+import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
+import EditRoundedIcon from '@material-ui/icons/EditRounded';
+import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
+import './drawer.css';
+
+// 'Choose a Collection', 'Add a Collection', 'Edit a Collection', 'Delete a Collection'
 
 const useStyles = makeStyles({
   list: {
@@ -44,22 +49,33 @@ export default function TemporaryDrawer() {
       onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+          <ListItem button key={"chooseCollection"}>
+            <ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
+            <ListItemText primary={"Choose a Collection"} />
           </ListItem>
-        ))}
       </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+		<List>
+          <ListItem button key={"addCollection"}>
+            <ListItemIcon><AddBoxRoundedIcon color="primary"/></ListItemIcon>
+            <ListItemText primary={"Add a Collection"} />
           </ListItem>
-        ))}
       </List>
+      <Divider />
+		<List>
+          <ListItem button key={"editCollection"}>
+            <ListItemIcon><EditRoundedIcon color="primary"/></ListItemIcon>
+            <ListItemText primary={"Edit a Collection"} />
+          </ListItem>
+      </List>
+      <Divider />
+		<List>
+          <ListItem button key={"deleteCollection"}>
+            <ListItemIcon><DeleteRoundedIcon color="primary"/></ListItemIcon>
+            <ListItemText primary={"Delete a Collection"} />
+          </ListItem>
+      </List>
+      <Divider />
     </div>
   );
 
@@ -67,7 +83,7 @@ export default function TemporaryDrawer() {
     <div>
       {['left'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={toggleDrawer(anchor, true)}>blah</Button>
+          <Button className='openDrawer' variant="contained" color="primary" onClick={toggleDrawer(anchor, true)}>Menu</Button>
           <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
             {list(anchor)}
           </Drawer>
