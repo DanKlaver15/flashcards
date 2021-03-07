@@ -1,12 +1,15 @@
 import React from 'react';
+import TemporaryDrawer from '../Drawer/drawer';
+import '../Drawer/drawer.css';
 import './titleBar.css';
 
 function TitleBar(props) { 
    return (
 		<div className="titlebar">
-			<button className="selectCollection">Select Collection Placeholder</button>
-			<button className="createCollection">Create New Collection Placeholder</button>
-			<div className="collection">Placeholder for Collection (React, C#, ...)</div>
+			<div className='menuButton'>
+			<TemporaryDrawer />
+			</div>
+			<div className="collection">{props.cardData.title}</div>
 		</div>
 	);
 }
