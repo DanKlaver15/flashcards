@@ -31,30 +31,32 @@ const useStyles = makeStyles((theme) => ({
  },
 }));
 
-export default function TemporaryDrawer(props) {
+let currentTitle = '';
 
-	let collectionsList = props.collectionData;
-	console.log(collectionsList);
+export function TemporaryDrawer(props) {
+
+	let allCards = props.allData;
 
   const classes = useStyles();
   const [state, setState] = React.useState({
-    left: false
+    left: false,
+	 collectionTitle: ''
   });
   const [chooseOpen, setChooseOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
 
-  const handleChooseClick = () => {
+  const handleChooseOpen = () => {
 	setChooseOpen(!chooseOpen);
- };
+	};
 
- const handleEditClick = () => {
-	setEditOpen(!editOpen);
- };
+	const handleEditOpen = () => {
+		setEditOpen(!editOpen);
+	};
 
- const handleDeleteClick = () => {
-	setDeleteOpen(!deleteOpen);
- };
+	const handleDeleteOpen = () => {
+		setDeleteOpen(!deleteOpen);
+	};
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -64,13 +66,21 @@ export default function TemporaryDrawer(props) {
     setState({ ...state, [anchor]: open });
   };
 
-  let listTitles = collectionsList.map((i) => {
-	return(
-		<ListItem button key={i.title} className={classes.nested}>
-			<ListItemText primary={i.title}/>
-		</ListItem>
-	)
-});
+  	function handleChooseClick(value) {
+		let temp = allCards.filter((i) => 
+			i.title === value
+		)
+		currentTitle = (temp[0].title);
+		props.selectCollection(temp[0]._id);
+	}
+
+  let listTitles = allCards.map((i) => {
+		return(
+			<ListItem button key={i.title} className={classes.nested} value={i.title} onClick={() => handleChooseClick(i.title)}>
+				<ListItemText primary={i.title}/>
+			</ListItem>
+		)
+	});
 
   const list = (anchor) => (
     <div
@@ -82,7 +92,7 @@ export default function TemporaryDrawer(props) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
 		<List>
-			<ListItem button key={"chooseCollection"} onClick={handleChooseClick}>
+			<ListItem button key={"chooseCollection"} onClick={handleChooseOpen}>
 			<ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
 			<ListItemText primary={"Choose a Collection"} />
 			{chooseOpen ? <ExpandLess /> : <ExpandMore />}
@@ -102,7 +112,7 @@ export default function TemporaryDrawer(props) {
       </List>
       <Divider />
 		<List>
-          <ListItem button key={"editCollection"} onClick={handleEditClick}>
+          <ListItem button key={"editCollection"} onClick={handleEditOpen}>
             <ListItemIcon><EditRoundedIcon color="primary"/></ListItemIcon>
             <ListItemText primary={"Edit a Collection"} />
 				{editOpen ? <ExpandLess /> : <ExpandMore />}
@@ -115,7 +125,7 @@ export default function TemporaryDrawer(props) {
       </List>
       <Divider />
 		<List>
-			<ListItem button key={"deleteCollection"} onClick={handleDeleteClick}>
+			<ListItem button key={"deleteCollection"} onClick={handleDeleteOpen}>
             <ListItemIcon><DeleteRoundedIcon color="primary"/></ListItemIcon>
             <ListItemText primary={"Delete a Collection"} />
 				{deleteOpen ? <ExpandLess /> : <ExpandMore />}
@@ -141,4 +151,10 @@ export default function TemporaryDrawer(props) {
       ))}
     </div>
   );
+}
+
+export function SetCurrentTitle() {
+	return (
+		<div className="collectionTitle">{currentTitle}</div>
+	)
 }
