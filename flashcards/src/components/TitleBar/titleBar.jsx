@@ -1,5 +1,5 @@
 import React from 'react';
-import TemporaryDrawer from '../Drawer/drawer';
+import {TemporaryDrawer, SetCurrentTitle} from '../Drawer/drawer';
 import '../Drawer/drawer.css';
 import './titleBar.css';
 
@@ -7,9 +7,9 @@ function TitleBar(props) {
    return (
 		<div className="titlebar">
 			<div className='menuButton'>
-			<TemporaryDrawer />
+			<TemporaryDrawer allData={props.allData} selectCollection={props.selectCollection}/>
 			</div>
-			<div className="collection">{props.cardData.title}</div>
+			<SetCurrentTitle />
 		</div>
 	);
 }
