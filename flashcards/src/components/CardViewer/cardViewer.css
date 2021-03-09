@@ -5,7 +5,7 @@
   position: relative;
 }
 
-.slides {
+ .slides {
   display: grid;
   margin: 0;
   position: absolute;
@@ -80,6 +80,7 @@
   transition: opacity 0.3s linear;
   text-shadow: 0 0.1rem 0.2rem #000;
   opacity: 0;
+  z-index: 2;
 }
 
 .slideContentInner .slideSubtitle,
@@ -89,6 +90,7 @@
   letter-spacing: 0.2ch;
   text-transform: uppercase;
   margin: 0;
+  z-index: 2;
 }
 
 .slideContentInner .slideSubtitle::before {
@@ -99,11 +101,11 @@
   margin: 0;
   font-size: 0.8rem;
   letter-spacing: 0.2ch;
+  z-index: 2;
 }
 
 .slide[data-active] {
   z-index: 2;
-  pointer-events: auto;
 }
 
 .slide[data-active] .slideBackground {
@@ -129,8 +131,4 @@
   100% {
     transform: perspective(400px) rotateY(180deg);
   }
-}
-
-.slide[data-flipped] {
-	animation: flipOver 0.5s
 }

@@ -1,19 +1,21 @@
 import React from 'react';
-// import CardFront from '../Card/cardFront';
-// import CardBack from '../Card/cardBack';
 import './cardViewer.css';
 
 const initialState = {
-  slideIndex: 0,
-//   showFront: true,
-//   showBack: false,
-//   setClick: 1
+	slideIndex: 0,
+	prevShowFront: true,
+	currentShowFront: true,
+	setClick: 1
 };
 
-function Slide({ slide, offset }) {
-  	const active = offset === 0 ? true : null;
+let slides = [];
+let slideNumber = 0;
 
+function Slide({ slide, offset, state, flipFunction }) {
+  	const active = offset === 0 ? true : null;
+	
   	return (
+		state.currentShowFront ?
 		<div
 			className="slide"
 			data-active={active}
@@ -23,48 +25,60 @@ function Slide({ slide, offset }) {
 			"--blur": offset !== 0 ? 1 : 0
 			}}
 		>
-			<div className="slideContent">
-			<div className="slideContentInner">
-				<h2 className="Word">{slide.word}</h2>
-				<p className="Definition">{slide.definition}</p>
-			</div>
+			<div className="slideContent" onClick={flipFunction}>
+					<div className="slideContentInner">
+						<h2 className="slideTitle">{slide.word}</h2>
+					</div>
 			</div>
 		</div>
-  );
+	: 
+		<div
+			className="slide"
+			data-active={active}
+			style={{
+			"--offset": offset,
+			"--dir": offset === 0 ? 0 : offset > 0 ? 1.5 : -1.5,
+			"--blur": offset !== 0 ? 1 : 0
+			}}
+		>
+			<div className="slideContent" onClick={flipFunction}>
+					<div className="slideContentInner">
+						<h2 className="slideDescription">{slide.definition}</h2>
+					</div>
+			</div>
+		</div>
+  )
 }
 
-function CardViewer(props) {
-	let slides = props.cardData;
+export function CardViewer(props) {
+	slides = props.collectionData;
 
 	const slidesReducer = (state, event) => {
 		if (event.type === "NEXT") {
 		  return {
 			 ...state,
-			 slideIndex: (state.slideIndex + 1) % slides.length
+			 slideIndex: (state.slideIndex + 1) % slides.length,
+			 currentShowFront: true,
+			 prevShowFront: true
+
 		  };
 		}
 		if (event.type === "PREV") {
 		  return {
 			 ...state,
-			 slideIndex:
-				state.slideIndex === 0 ? slides.length - 1 : state.slideIndex - 1
+			 slideIndex: state.slideIndex === 0 ? slides.length - 1 : state.slideIndex - 1,
+			 currentShowFront: true,
+			 prevShowFront: true
 		  };
 		}
 		if (event.type === "CLICK") {
-				if (state.setClick % 2 !== 0) {
-				 return {
-					 ...state,
-					 showBack: true,
-					 setClick: state.setClick++
-				 };
-				} else if (state.setClick % 2 === 0) {
-				 return {
-					 ...state,
-					 showFront: false,
-					 setClick: state.setClick++
-				 };
-			 }
-			}
+
+			return {
+				...state,
+				currentShowFront: !state.prevShowFront,
+				prevShowFront: !state.currentShowFront
+			};
+		}
 	 };
 
   	const [state, dispatch] = React.useReducer(slidesReducer, initialState);
@@ -73,13 +87,26 @@ function CardViewer(props) {
 		<div className="slides">
 			<button onClick={() => dispatch({ type: "PREV" })}>‹</button>
 
-			{[...slides, ...slides, ...slides].map((slide, i) => {
+			{[...slides, ...slides].map((slide, i) => {
 			let offset = slides.length + (state.slideIndex - i);
-			return <Slide slide={slide} offset={offset} key={i} state={state} onClick={() => dispatch({ type: "CLICK" })} />;
+			return (
+				<Slide 
+				slide={slide}
+				offset={offset} 
+				key={i} 
+				state={state}
+				flipFunction={() => dispatch({ type: "CLICK" })}
+				>
+				</Slide>
+			)
 			})}
 			<button onClick={() => dispatch({ type: "NEXT" })}>›</button>
 		</div>
 	);
 }
 
-export default CardViewer;
+export function SetSlideCount() {
+	return (
+		<div className="slideCount">Slide {slideNumber} of {slides.length}</div>
+	)
+}
