@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TitleBar from './TitleBar/titleBar';
-import CardViewer from './CardViewer/cardViewer';
+import {CardViewer} from './CardViewer/cardViewer';
 import Footer from './Footer/footer';
 import "./app.css";
 
