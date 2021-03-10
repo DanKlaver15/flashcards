@@ -1,4 +1,6 @@
 import React from 'react';
+import CreateModal from '../CreateCollection/createCollection';
+// import useModal from '../CreateCollection/useModal';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -16,8 +18,6 @@ import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import './drawer.css';
-
-// 'Choose a Collection', 'Add a Collection', 'Edit a Collection', 'Delete a Collection'
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -45,6 +45,7 @@ export function TemporaryDrawer(props) {
   const [chooseOpen, setChooseOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [modalShow, setModalShow] = React.useState(false);
 
   const handleChooseOpen = () => {
 	setChooseOpen(!chooseOpen);
@@ -65,6 +66,14 @@ export function TemporaryDrawer(props) {
 
     setState({ ...state, [anchor]: open });
   };
+
+  const toggleDrawerAndOpenModal = (anchor, open) => (event) => {
+	if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+		return;
+	}
+	setState({ ...state, [anchor]: open });
+	setModalShow(true);
+	};
 
   	function handleChooseClick(value) {
 		let temp = allCards.filter((i) => 
@@ -105,11 +114,11 @@ export function TemporaryDrawer(props) {
       </List>
       <Divider />
 		<List>
-          <ListItem button key={"addCollection"}>
-            <ListItemIcon><AddBoxRoundedIcon color="primary"/></ListItemIcon>
-            <ListItemText primary={"Add a Collection"} />
-          </ListItem>
-      </List>
+			<ListItem button key={"addCollection"} onClick={toggleDrawerAndOpenModal(anchor, false)}>
+				<ListItemIcon><AddBoxRoundedIcon color="primary"/></ListItemIcon>
+				<ListItemText primary={"Add a Collection"} />
+			</ListItem>
+      </List>	
       <Divider />
 		<List>
           <ListItem button key={"editCollection"} onClick={handleEditOpen}>
@@ -139,17 +148,22 @@ export function TemporaryDrawer(props) {
     </div>
   );
 
-  return (
-    <div>
-      {['left'].map((anchor) => (
-        <React.Fragment key={anchor}>
-          <Button className='openDrawer' variant="contained" color="primary" onClick={toggleDrawer(anchor, true)}>Menu</Button>
-          <Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
-            {list(anchor)}
-          </Drawer>
-        </React.Fragment>
-      ))}
-    </div>
+	return (
+		<div>
+		{['left'].map((anchor) => (
+			<React.Fragment key={anchor}>
+				<Button className='openDrawer' variant="contained" color="primary" onClick={toggleDrawer(anchor, true)}>Menu</Button>
+					<Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
+						{list(anchor)}
+					</Drawer>
+					<CreateModal 
+					addcollection={props.addCollection}
+					show={modalShow} 
+					onHide={() => setModalShow(false)}
+					/>
+			</React.Fragment>
+		))}
+		</div>
   );
 }
 
