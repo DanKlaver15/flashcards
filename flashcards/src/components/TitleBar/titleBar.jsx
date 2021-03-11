@@ -4,10 +4,11 @@ import '../Drawer/drawer.css';
 import './titleBar.css';
 
 function TitleBar(props) { 
+
    return (
 		<div className="titlebar">
 			<div className='menuButton'>
-			<TemporaryDrawer allData={props.allData} selectCollection={props.selectCollection}/>
+			<TemporaryDrawer allData={props.allData} selectCollection={props.selectCollection} addCollection={props.addCollection} deleteCollection={props.deleteCollection}/>
 			</div>
 			<SetCurrentTitle />
 		</div>
