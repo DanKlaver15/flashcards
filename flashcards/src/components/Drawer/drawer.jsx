@@ -1,6 +1,7 @@
 import React from 'react';
 import CreateModal from '../CreateCollection/createCollection';
 import DeleteModal from '../DeleteCollection/deleteCollection';
+import EditModal from '../EditCollection/editCollection';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -34,6 +35,8 @@ const useStyles = makeStyles((theme) => ({
 let currentTitle = '';
 let deleteTitle = '';
 let deleteID = '';
+let editTitle = '';
+let editID = '';
 
 export function TemporaryDrawer(props) {
 
@@ -49,6 +52,7 @@ export function TemporaryDrawer(props) {
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [createModalShow, setCreateModalShow] = React.useState(false);
   const [deleteModalShow, setDeleteModalShow] = React.useState(false);
+  const [editModalShow, setEditModalShow] = React.useState(false);
 
   const handleChooseOpen = () => {
 	setChooseOpen(!chooseOpen);
@@ -78,7 +82,15 @@ export function TemporaryDrawer(props) {
 		setCreateModalShow(true);
 	};
 
-	const toggleDrawerDisplayDeleteModal = (anchor, value) => (event) => {
+	const toggleDrawerDisplayEditModal = (anchor) => (event) => {
+		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+			return;
+		}
+		setState({ ...state, [anchor]: false });
+		setEditModalShow(true);
+	};
+
+	const toggleDrawerDisplayDeleteModal = (anchor) => (event) => {
 		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
 			return;
 		}
@@ -94,6 +106,14 @@ export function TemporaryDrawer(props) {
 		props.selectCollection(temp[0]._id);
 	}
 
+	function handleEditClick(value) {
+		let temp = allCards.filter((i) => 
+			i.title === value
+		)
+		editTitle = (temp[0].title);
+		editID = (temp[0]._id);
+	}
+
 	function handleDeleteClick(value) {
 		let temp = allCards.filter((i) => 
 			i.title === value
@@ -105,6 +125,14 @@ export function TemporaryDrawer(props) {
   	let listTitlesToChoose = allCards.map((i) => {
 		return(
 			<ListItem button key={i.title} className={classes.nested} value={i.title} onClick={() => handleChooseClick(i.title)}>
+				<ListItemText primary={i.title}/>
+			</ListItem>
+		)
+	});
+
+	let listTitlesToEdit = allCards.map((i) => {
+		return(
+			<ListItem button key={i.title} className={classes.nested} value={i._id} onClick={() => handleEditClick(i.title)}>
 				<ListItemText primary={i.title}/>
 			</ListItem>
 		)
@@ -154,8 +182,8 @@ export function TemporaryDrawer(props) {
 				{editOpen ? <ExpandLess /> : <ExpandMore />}
 			</ListItem>
 			<Collapse in={editOpen} timeout="auto" unmountOnExit>
-			<List component="div" disablePadding>
-				{listTitlesToChoose}
+			<List component="div" disablePadding onClick={toggleDrawerDisplayEditModal(anchor, false)}>
+				{listTitlesToEdit}
 			</List>
 			</Collapse>
       </List>
@@ -187,6 +215,13 @@ export function TemporaryDrawer(props) {
 					addcollection={props.addCollection}
 					show={createModalShow} 
 					onHide={() => setCreateModalShow(false)}
+					/>
+					<EditModal 
+					editcollection={props.editCollection}
+					edittitle={editTitle}
+					editid={editID}
+					show={editModalShow} 
+					onHide={() => setEditModalShow(false)}
 					/>
 					<DeleteModal 
 					deletecollection={props.deleteCollection}
