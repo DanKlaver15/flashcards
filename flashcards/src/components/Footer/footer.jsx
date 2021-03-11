@@ -1,10 +1,11 @@
 import React from 'react';
+import { SetSlideCount } from '../CardViewer/cardViewer';
 import './footer.css';
 
 function Footer(props) { 
    return (
 		<div className="footer">
-			<div className="slideCount">Placeholder for Slide Count (1 of 20)</div>
+			<SetSlideCount />
 		</div>
 	);
 }
