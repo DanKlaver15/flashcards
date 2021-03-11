@@ -22,6 +22,16 @@ function App() {
 		.then(data =>	setCollectionData(data.data), setDataReady(true));
 	}
 
+	function addCollection(title) {
+		axios.post(connectionURI, title)
+		.then(setDataReady(true));
+	}
+
+	function deleteCollection(collectionID) {
+		axios.delete(`http://localhost:5000/api/collections/${collectionID}`)
+		.then(data =>	setCollectionData(data.data), setDataReady(true));
+	}
+
 	useEffect(() => {
 		getAllCards(connectionURI);
 	}, [connectionURI]);
@@ -29,7 +39,7 @@ function App() {
 	return (
 		dataReady ?
 			<div id="main">
-				<TitleBar allData={allData} selectCollection={selectCollection} collectionData={collectionData}/>
+				<TitleBar allData={allData} selectCollection={selectCollection} collectionData={collectionData} addCollection={addCollection} deleteCollection={deleteCollection}/>
 				<CardViewer collectionData={collectionData} />
 				<Footer />
 			</div>
