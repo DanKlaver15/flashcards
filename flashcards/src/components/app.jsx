@@ -10,11 +10,12 @@ function App() {
 	const [collectionData, setCollectionData] = useState([]);
 	const [dataReady, setDataReady] = useState(false);
 
-	let connectionURI = "http://localhost:5000/api/collections/"
+	let connectionURI = "http://localhost:5000/api/collections/";
 
 	function getAllCards(uri) {
+		debugger;
 		axios.get(uri)
-		.then(data => setAllData(data.data), setDataReady(true));
+		.then(data => setAllData(data.data), setDataReady(true))
 	}
 
 	function selectCollection(collectionID) {
@@ -24,12 +25,20 @@ function App() {
 
 	function addCollection(title) {
 		axios.post(connectionURI, title)
-		.then(setDataReady(true));
+		.then(setDataReady(false))
+		.then(() => getAllCards(connectionURI));
+	}
+
+	function editCollection(collectionID, title) {
+		axios.put(`http://localhost:5000/api/collections/${collectionID}`, title)
+		.then(setDataReady(false))
+		.then(() => getAllCards(connectionURI));
 	}
 
 	function deleteCollection(collectionID) {
 		axios.delete(`http://localhost:5000/api/collections/${collectionID}`)
-		.then(data =>	setCollectionData(data.data), setDataReady(true));
+		.then(data =>	setCollectionData(data.data), setDataReady(false))
+		.then(() => getAllCards(connectionURI));
 	}
 
 	useEffect(() => {
@@ -39,7 +48,7 @@ function App() {
 	return (
 		dataReady ?
 			<div id="main">
-				<TitleBar allData={allData} selectCollection={selectCollection} collectionData={collectionData} addCollection={addCollection} deleteCollection={deleteCollection}/>
+				<TitleBar allData={allData} getAllCards={getAllCards} selectCollection={selectCollection} collectionData={collectionData} addCollection={addCollection} editCollection={editCollection} deleteCollection={deleteCollection}/>
 				<CardViewer collectionData={collectionData} />
 				<Footer />
 			</div>
