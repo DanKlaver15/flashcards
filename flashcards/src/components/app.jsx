@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import TitleBar from './TitleBar/titleBar';
-import {CardViewer} from './CardViewer/cardViewer';
+import CardViewer from './CardViewer/cardViewer';
 import Footer from './Footer/footer';
 import "./app.css";
 
@@ -13,12 +13,12 @@ function App() {
 	let connectionURI = "http://localhost:5000/api/collections/";
 
 	function getAllCards(uri) {
-		debugger;
 		axios.get(uri)
 		.then(data => setAllData(data.data), setDataReady(true))
 	}
 
 	function selectCollection(collectionID) {
+		setCollectionData([]);
 		axios.get(`http://localhost:5000/api/collections/${collectionID}/cards`)
 		.then(data =>	setCollectionData(data.data), setDataReady(true));
 	}
@@ -31,13 +31,13 @@ function App() {
 
 	function editCollection(collectionID, title) {
 		axios.put(`http://localhost:5000/api/collections/${collectionID}`, title)
-		.then(setDataReady(false))
+		.then(setDataReady(true))
 		.then(() => getAllCards(connectionURI));
 	}
 
 	function deleteCollection(collectionID) {
 		axios.delete(`http://localhost:5000/api/collections/${collectionID}`)
-		.then(data =>	setCollectionData(data.data), setDataReady(false))
+		.then(setDataReady(true))
 		.then(() => getAllCards(connectionURI));
 	}
 
@@ -48,7 +48,7 @@ function App() {
 	return (
 		dataReady ?
 			<div id="main">
-				<TitleBar allData={allData} getAllCards={getAllCards} selectCollection={selectCollection} collectionData={collectionData} addCollection={addCollection} editCollection={editCollection} deleteCollection={deleteCollection}/>
+				<TitleBar allData={allData} selectCollection={selectCollection} collectionData={collectionData} addCollection={addCollection} editCollection={editCollection} deleteCollection={deleteCollection}/>
 				<CardViewer collectionData={collectionData} />
 				<Footer />
 			</div>
