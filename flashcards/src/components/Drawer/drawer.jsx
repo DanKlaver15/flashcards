@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import CreateModal from '../CreateCollection/createCollection';
 import DeleteModal from '../DeleteCollection/deleteCollection';
 import EditModal from '../EditCollection/editCollection';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/styles';
+import { purple } from '@material-ui/core/colors';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -30,6 +33,15 @@ const useStyles = makeStyles((theme) => ({
   nested: {
 	paddingLeft: theme.spacing(10),
  },
+ 	button: {
+		background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+		border: 0,
+		borderRadius: 3,
+		boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
+		color: 'white',
+		height: 48,
+		padding: '0 30px',
+	 }
 }));
 
 let currentTitle = '';
@@ -40,19 +52,23 @@ let editID = '';
 
 export function TemporaryDrawer(props) {
 
-	let allCards = props.allData;
+	const classes = useStyles();
+	const [state, setState] = React.useState({
+		left: false,
+		collectionTitle: ''
+	});
+	const [allCards, setAllCards] = React.useState([]);
+	const [chooseOpen, setChooseOpen] = React.useState(false);
+	const [editOpen, setEditOpen] = React.useState(false);
+	const [deleteOpen, setDeleteOpen] = React.useState(false);
+	const [createModalShow, setCreateModalShow] = React.useState(false);
+	const [deleteModalShow, setDeleteModalShow] = React.useState(false);
+	const [editModalShow, setEditModalShow] = React.useState(false);
 
-  const classes = useStyles();
-  const [state, setState] = React.useState({
-    left: false,
-	 collectionTitle: ''
-  });
-  const [chooseOpen, setChooseOpen] = React.useState(false);
-  const [editOpen, setEditOpen] = React.useState(false);
-  const [deleteOpen, setDeleteOpen] = React.useState(false);
-  const [createModalShow, setCreateModalShow] = React.useState(false);
-  const [deleteModalShow, setDeleteModalShow] = React.useState(false);
-  const [editModalShow, setEditModalShow] = React.useState(false);
+	useEffect(() => {
+		console.log("props allData", props.allData);
+		setAllCards(props.allData);
+	}, [props.allData])
 
   const handleChooseOpen = () => {
 	setChooseOpen(!chooseOpen);
@@ -207,12 +223,13 @@ export function TemporaryDrawer(props) {
 		<div>
 		{['left'].map((anchor) => (
 			<React.Fragment key={anchor}>
-				<Button className='openDrawer' variant="contained" color="primary" onClick={toggleDrawer(anchor, true)}>Menu</Button>
+				<Button className={classes.button} variant="contained" onClick={toggleDrawer(anchor, true)}>Menu</Button>
 					<Drawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>
 						{list(anchor)}
 					</Drawer>
 					<CreateModal 
 					addcollection={props.addCollection}
+					getallcards={props.getAllCards}
 					show={createModalShow} 
 					onHide={() => setCreateModalShow(false)}
 					/>
