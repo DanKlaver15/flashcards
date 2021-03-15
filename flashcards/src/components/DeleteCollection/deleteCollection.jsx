@@ -13,11 +13,10 @@ function DeleteModal(props) {
 	const handleEnter = (deleteid) => (event) => {
 		event.preventDefault();
 		if (event.which === 13) {
-			event.preventDefault();
 			props.deletecollection(deleteid);
 			props.onHide();
 		}
-	 };
+	};
 
 	return (
 		<div onKeyDown={handleEnter(props.deleteid)}>
