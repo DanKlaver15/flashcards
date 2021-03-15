@@ -28,8 +28,6 @@
   color: white;
   position: absolute;
   font-size: 5rem;
-  width: 5rem;
-  height: 5rem;
   transition: opacity 0.3s;
   opacity: 0.7;
   z-index: 5;
@@ -57,21 +55,40 @@
 }
 
 .slideContent {
-  width: 30vw;
-  height: 20vw;
-  text-align: center;
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
-  transition: transform 0.7s ease-in-out;
-  opacity: 0.4;
-  display: grid;
-  align-content: center;
-  transform-style: preserve-3d;
-  transform: perspective(1000px) translateX(calc(100% * var(--offset))) translateY(30%) rotateY(calc(-45deg * var(--dir)));
-  filter: blur(calc(6px * var(--blur)));
-  background: radial-gradient(ellipse at top, rgba(233,216,195,1), transparent),
-  					radial-gradient(ellipse at bottom, rgba(230,245,240,1), transparent);
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	width: 30vw;
+	height: 20vw;
+	text-align: center;
+	background-size: cover;
+	background-position: center center;
+	background-repeat: no-repeat;
+	transition: transform 0.7s ease-in-out;
+	opacity: 0.4;
+	display: grid;
+	align-content: center;
+	transform-style: preserve-3d;
+	transform: perspective(1000px) translateX(calc(100% * var(--offset))) translateY(30%) rotateY(calc(-45deg * var(--dir)));
+	filter: blur(calc(6px * var(--blur)));
+	background: radial-gradient(ellipse at top, rgba(233,216,195,1), transparent),
+					radial-gradient(ellipse at bottom, rgba(230,245,240,1), transparent);
+}
+
+@keyframes flipOver {
+	0% {
+		transform: perspective(400px) rotateY(0);
+  }
+  100% {
+		transform: perspective(400px) rotateY(180deg);
+  }
+}
+
+.slide[data-active][animateflip='1'] {
+	transform-style: preserve-3d;
+	animation: flipOver 1s;
+	transition: opacity 0.3s linear;
+	
 }
 
 .slideContentInner {
@@ -124,11 +141,11 @@
   transform: perspective(1000px);
 }
 
-@keyframes flipOver {
-	0% {
-    transform: perspective(400px) rotateY(0);
-  }
-  100% {
-    transform: perspective(400px) rotateY(180deg);
-  }
+p.slideCount {
+	position: absolute;
+	/* height: 50%; */
+	padding: 0;
+	font-size: 0.7rem;
+	bottom: 0px;
+	margin: auto;
 }
