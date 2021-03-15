@@ -23,6 +23,7 @@ function CreateModal(props) {
 
 	const handleEnter = (event) => {
 		if (event.which === 13) {
+			event.preventDefault();
 			const collectionName = {
 				title: title
 			}
