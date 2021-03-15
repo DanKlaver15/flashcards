@@ -1,12 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import CreateModal from '../CreateCollection/createCollection';
 import DeleteModal from '../DeleteCollection/deleteCollection';
 import EditModal from '../EditCollection/editCollection';
+import AddCardModal from '../CreateCard/createCards';
+import EditDeleteCardModal from '../EditAndDeleteCards/editAndDeleteCards';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { createMuiTheme } from '@material-ui/core/styles';
-import { ThemeProvider } from '@material-ui/styles';
-import { purple } from '@material-ui/core/colors';
 import Drawer from '@material-ui/core/Drawer';
 import Button from '@material-ui/core/Button';
 import List from '@material-ui/core/List';
@@ -22,6 +21,8 @@ import AddBoxRoundedIcon from '@material-ui/icons/AddBoxRounded';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 import './drawer.css';
+import { ListSubheader } from '@material-ui/core';
+
 
 const useStyles = makeStyles((theme) => ({
   list: {
@@ -37,7 +38,6 @@ const useStyles = makeStyles((theme) => ({
 		background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
 		border: 0,
 		borderRadius: 3,
-		boxShadow: '0 3px 5px 2px rgba(255, 105, 135, .3)',
 		color: 'white',
 		height: 48,
 		padding: '0 30px',
@@ -45,6 +45,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 let currentTitle = '';
+let currentID = '';
 let deleteTitle = '';
 let deleteID = '';
 let editTitle = '';
@@ -57,16 +58,17 @@ export function TemporaryDrawer(props) {
 		left: false,
 		collectionTitle: ''
 	});
-	const [allCards, setAllCards] = React.useState([]);
-	const [chooseOpen, setChooseOpen] = React.useState(false);
-	const [editOpen, setEditOpen] = React.useState(false);
-	const [deleteOpen, setDeleteOpen] = React.useState(false);
-	const [createModalShow, setCreateModalShow] = React.useState(false);
-	const [deleteModalShow, setDeleteModalShow] = React.useState(false);
-	const [editModalShow, setEditModalShow] = React.useState(false);
+	const [allCards, setAllCards] = useState([]);
+	const [chooseOpen, setChooseOpen] = useState(false);
+	const [editOpen, setEditOpen] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false);
+	const [createModalShow, setCreateModalShow] = useState(false);
+	const [deleteModalShow, setDeleteModalShow] = useState(false);
+	const [editModalShow, setEditModalShow] = useState(false);
+	const [addCardModalShow, setAddCardModalShow] = useState(false);
+	const [editDeleteCardModalShow, setEditDeleteCardModalShow] = useState(false);
 
 	useEffect(() => {
-		console.log("props allData", props.allData);
 		setAllCards(props.allData);
 	}, [props.allData])
 
@@ -86,7 +88,6 @@ export function TemporaryDrawer(props) {
     if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
       return;
     }
-
     setState({ ...state, [anchor]: open });
   };
 
@@ -114,12 +115,30 @@ export function TemporaryDrawer(props) {
 		setDeleteModalShow(true);
 	};
 
+	const toggleDrawerDisplayAddCardModal = (anchor, open) => (event) => {
+		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+			return;
+		}
+		setState({ ...state, [anchor]: open });
+		setAddCardModalShow(true);
+	};
+
+	const toggleDrawerDisplayEditDeleteCardModal = (anchor, open) => (event) => {
+		if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+			return;
+		}
+		setState({ ...state, [anchor]: open });
+		setEditDeleteCardModalShow(true);
+	};
+
   	function handleChooseClick(value) {
 		let temp = allCards.filter((i) => 
 			i.title === value
 		)
 		currentTitle = (temp[0].title);
+		currentID = (temp[0]._id);
 		props.selectCollection(temp[0]._id);
+		setState({ ...state, left: false });
 	}
 
 	function handleEditClick(value) {
@@ -140,7 +159,7 @@ export function TemporaryDrawer(props) {
 
   	let listTitlesToChoose = allCards.map((i) => {
 		return(
-			<ListItem button key={i.title} className={classes.nested} value={i.title} onClick={() => handleChooseClick(i.title)}>
+			<ListItem button key={i.title} className={classes.nested} onClick={() => handleChooseClick(i.title)}>
 				<ListItemText primary={i.title}/>
 			</ListItem>
 		)
@@ -148,7 +167,7 @@ export function TemporaryDrawer(props) {
 
 	let listTitlesToEdit = allCards.map((i) => {
 		return(
-			<ListItem button key={i.title} className={classes.nested} value={i._id} onClick={() => handleEditClick(i.title)}>
+			<ListItem button key={i.title} className={classes.nested} onClick={() => handleEditClick(i.title)}>
 				<ListItemText primary={i.title}/>
 			</ListItem>
 		)
@@ -156,7 +175,7 @@ export function TemporaryDrawer(props) {
 
 	let listTitlesToDelete = allCards.map((i) => {
 		return(
-			<ListItem button key={i.title} className={classes.nested} value={i._id} onClick={() => handleDeleteClick(i.title)}>
+			<ListItem button key={i.title} className={classes.nested} value={i.title} onClick={() => handleDeleteClick(i.title)}>
 				<ListItemText primary={i.title}/>
 			</ListItem>
 		)
@@ -172,25 +191,26 @@ export function TemporaryDrawer(props) {
       onKeyDown={toggleDrawer(anchor, false)}
     >
 		<List>
-			<ListItem button key={"chooseCollection"} onClick={handleChooseOpen}>
-			<ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
-			<ListItemText primary={"Choose a Collection"} />
-			{chooseOpen ? <ExpandLess /> : <ExpandMore />}
-			</ListItem>
-			<Collapse in={chooseOpen} timeout="auto" unmountOnExit>
-			<List component="div" disablePadding>
-				{listTitlesToChoose}
-			</List>
-			</Collapse>
+			<ListSubheader>
+				<ListItemText primary={"Collections"} />
+			</ListSubheader>
+				<ListItem button key={"chooseCollection"} onClick={handleChooseOpen}>
+				<ListItemIcon><ListRoundedIcon color="primary"/></ListItemIcon>
+				<ListItemText primary={"Choose a Collection"} />
+				{chooseOpen ? <ExpandLess /> : <ExpandMore />}
+				</ListItem>
+				<Collapse in={chooseOpen} timeout="auto" unmountOnExit>
+				<List component="div" disablePadding>
+					{listTitlesToChoose}
+				</List>
+				</Collapse>
       </List>
-      <Divider />
 		<List>
 			<ListItem button key={"addCollection"} onClick={toggleDrawerDisplayCreateModal(anchor, false)}>
 				<ListItemIcon><AddBoxRoundedIcon color="primary"/></ListItemIcon>
 				<ListItemText primary={"Add a Collection"} />
 			</ListItem>
       </List>	
-      <Divider />
 		<List>
           <ListItem button key={"editCollection"} onClick={handleEditOpen}>
             <ListItemIcon><EditRoundedIcon color="primary"/></ListItemIcon>
@@ -203,7 +223,6 @@ export function TemporaryDrawer(props) {
 			</List>
 			</Collapse>
       </List>
-      <Divider />
 		<List>
 			<ListItem button key={"deleteCollection"} onClick={handleDeleteOpen}>
             <ListItemIcon><DeleteRoundedIcon color="primary"/></ListItemIcon>
@@ -216,6 +235,20 @@ export function TemporaryDrawer(props) {
 			</List>
 			</Collapse>
       </List>
+		<Divider />
+		<List>
+			<ListSubheader>
+				<ListItemText primary={"Cards"} />
+			</ListSubheader>
+				<ListItem button key={"addCard"} onClick={toggleDrawerDisplayAddCardModal(anchor, false)}>
+					<ListItemIcon><AddBoxRoundedIcon color="primary"/></ListItemIcon>
+					<ListItemText primary={"Add a Card to Current Collection"} />
+				</ListItem>
+				<ListItem button key={"editDeleteCards"} onClick={toggleDrawerDisplayEditDeleteCardModal(anchor, false)}>
+					<ListItemIcon><EditRoundedIcon color="primary"/></ListItemIcon>
+					<ListItemText primary={"Edit/Delete Cards in Current Collection"} />
+				</ListItem>
+		</List>
     </div>
   );
 
@@ -228,24 +261,39 @@ export function TemporaryDrawer(props) {
 						{list(anchor)}
 					</Drawer>
 					<CreateModal 
-					addcollection={props.addCollection}
-					getallcards={props.getAllCards}
-					show={createModalShow} 
-					onHide={() => setCreateModalShow(false)}
+						addcollection={props.addCollection}
+						show={createModalShow} 
+						onHide={() => setCreateModalShow(false)}
 					/>
 					<EditModal 
-					editcollection={props.editCollection}
-					edittitle={editTitle}
-					editid={editID}
-					show={editModalShow} 
-					onHide={() => setEditModalShow(false)}
+						editcollection={props.editCollection}
+						edittitle={editTitle}
+						editid={editID}
+						show={editModalShow} 
+						onHide={() => setEditModalShow(false)}
 					/>
 					<DeleteModal 
-					deletecollection={props.deleteCollection}
-					deletetitle={deleteTitle}
-					deleteid={deleteID}
-					show={deleteModalShow} 
-					onHide={() => setDeleteModalShow(false)}
+						deletecollection={props.deleteCollection}
+						deletetitle={deleteTitle}
+						deleteid={deleteID}
+						show={deleteModalShow} 
+						onHide={() => setDeleteModalShow(false)}
+					/>
+					<AddCardModal 
+						addcard={props.addCard}
+						collectionid={currentID}
+						currentitle={currentTitle}
+						show={addCardModalShow} 
+						onHide={() => setAddCardModalShow(false)}
+					/>
+					<EditDeleteCardModal
+						deletecard={props.deleteCard}
+						editcard={props.editCard}
+						collectiondata={props.collectionData}
+						collectionid={currentID}
+						currentitle={currentTitle}
+						show={editDeleteCardModalShow} 
+						onHide={() => setEditDeleteCardModalShow(false)}
 					/>
 			</React.Fragment>
 		))}
