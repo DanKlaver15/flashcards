@@ -157,12 +157,7 @@ const EnhancedTableToolbar = (props) => {
 					</IconButton>
 				</Tooltip>
 		  </Grid>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+      ) : ( null
       )}
     </Toolbar>
   );
