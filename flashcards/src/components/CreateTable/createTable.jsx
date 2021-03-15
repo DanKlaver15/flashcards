@@ -18,6 +18,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
+import EditIcon from '@material-ui/icons/Edit';
+import Grid from '@material-ui/core/Grid';
+import EditCardSubModal from '../EditCardsSubModal/editCardSubModal';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -126,7 +129,6 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
-  const { collectionID } = props;
 
   return (
     <Toolbar
@@ -143,11 +145,18 @@ const EnhancedTableToolbar = (props) => {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete" onClick={() => props.deleteRow(collectionID)}>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+			<Grid container>
+				<Tooltip title="Edit">
+					<IconButton aria-label="edit" onClick={() => props.editRow()}>
+						<EditIcon />
+					</IconButton>
+				</Tooltip>
+				<Tooltip title="Delete">
+					<IconButton aria-label="delete" onClick={() => props.deleteRow()}>
+						<DeleteIcon />
+					</IconButton>
+				</Tooltip>
+		  </Grid>
       ) : (
         <Tooltip title="Filter list">
           <IconButton aria-label="filter list">
@@ -195,6 +204,8 @@ export default function EnhancedTable(props) {
 	const [selected, setSelected] = React.useState([]);
 	const [page, setPage] = React.useState(0);
 	const [rowsPerPage, setRowsPerPage] = React.useState(5);
+	const [showEditModal, setShowEditModal] = React.useState(false);
+	const [cardInfo, setCardInfo] = React.useState([]);
 
 	React.useEffect(() => {
 		setRows(props.collectiondata);
@@ -256,6 +267,19 @@ export default function EnhancedTable(props) {
 		}
 	}
 
+	const handleEdit = () => {
+		if (selected.length > 1) {
+			alert("Please choose 1 row at a time to edit");
+		}
+		else if (selected.length === 1) {
+			let temp = rows.filter((i) => 
+				i.word === selected[0]
+			)
+			setCardInfo(temp[0]);
+			setShowEditModal(true);
+		}
+	}
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -263,7 +287,7 @@ export default function EnhancedTable(props) {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} deleteRow={handleDelete} collectionID={props.collectionid}/>
+        <EnhancedTableToolbar numSelected={selected.length} deleteRow={handleDelete} collectionID={props.collectionid} editRow={handleEdit}/>
         <TableContainer>
           <Table
             className={classes.table}
@@ -328,6 +352,13 @@ export default function EnhancedTable(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
+		<EditCardSubModal
+			editcard={props.editcard} 
+			cardinfo={cardInfo}
+			collectionid={props.collectionid}
+			show={showEditModal}
+			onHide={() => setShowEditModal(false)}
+		/>
     </div>
   );
 }
