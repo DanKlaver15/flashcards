@@ -26,6 +26,7 @@ function EditModal(props) {
 			const collectionName = {
 				title: title
 			}
+			event.preventDefault();
 			props.editcollection(editid, collectionName);
 			setTitle('');
 			props.onHide();
